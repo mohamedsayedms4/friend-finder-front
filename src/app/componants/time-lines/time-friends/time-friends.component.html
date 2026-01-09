@@ -1,0 +1,78 @@
+<div class="container">
+  <div class="timeline">
+    <app-time-line-profile></app-time-line-profile>
+
+    <div id="page-contents">
+      <div class="row">
+        <div class="col-md-3"></div>
+
+        <div class="col-md-7">
+
+          <!-- Friend List ================================================= -->
+          <div class="friend-list">
+
+            <!-- Loading / Error / Empty -->
+            <div *ngIf="loading" class="text-muted" style="padding: 10px 0;">
+              Loading friends...
+            </div>
+
+            <div *ngIf="!loading && errorMsg" class="text-danger" style="padding: 10px 0;">
+              {{ errorMsg }}
+            </div>
+
+            <div *ngIf="!loading && !errorMsg && friends.length === 0" class="text-muted" style="padding: 10px 0;">
+              No friends yet.
+            </div>
+
+            <!-- Grid -->
+            <div class="row" *ngIf="!loading && !errorMsg && friends.length > 0">
+
+              <div class="col-md-6 col-sm-6" *ngFor="let f of friends; let i = index">
+                <div class="friend-card">
+
+                  <!-- Cover -->
+                  <img
+                    [src]="coverSrc(i)"
+                    alt="profile-cover"
+                    class="img-responsive cover"
+                  >
+
+                  <div class="card-info">
+
+                    <!-- Profile photo -->
+                    <img
+                      [src]="imageSrc(f)"
+                      (error)="onImgError($event)"
+                      alt="user"
+                      class="profile-photo-lg"
+                    >
+
+                    <div class="friend-info">
+                      <a href="#" class="pull-right text-green">My Friend</a>
+
+                      <h5>
+                        <!-- عدّل routerLink حسب routing عندك -->
+                        <a [routerLink]="['/timeline']" class="profile-link">
+                          {{ displayName(f) }}
+                        </a>
+                      </h5>
+
+                      <!-- لو عندك jobTitle في البروفايل رجّعه من الباك وحطه هنا -->
+                      <p>{{ f.email }}</p>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <app-time-line-detailes></app-time-line-detailes>
+      </div>
+    </div>
+
+  </div>
+</div>

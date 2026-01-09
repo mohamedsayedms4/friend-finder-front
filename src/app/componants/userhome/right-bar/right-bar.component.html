@@ -1,0 +1,106 @@
+<div class="col-md-2 static">
+  <div class="suggestions" id="sticky-sidebar">
+
+    <!-- Friend Requests -->
+    <h4 class="grey">
+      Friend Requests
+      <small *ngIf="incomingTotal > 0">({{ incomingTotal }})</small>
+    </h4>
+
+    <div *ngIf="loadingRequests" class="text-muted" style="padding:10px 0;">
+      Loading...
+    </div>
+
+    <div *ngIf="!loadingRequests && incoming.length === 0" class="text-muted" style="padding:10px 0;">
+      No requests.
+    </div>
+
+    <div class="follow-user" *ngFor="let r of incomingLimited">
+      <img
+        [src]="imageSrcReq(r)"
+        (error)="onImgError($event)"
+        alt=""
+        class="profile-photo-sm pull-left"
+      />
+
+      <div>
+        <h5>
+          <a [routerLink]="['/timeline']">{{ displayNameReq(r) }}</a>
+        </h5>
+
+        <a href="#" class="text-green"
+           (click)="$event.preventDefault(); acceptReq(r)"
+           [style.pointerEvents]="isBusy(r.userId) ? 'none' : 'auto'"
+           [style.opacity]="isBusy(r.userId) ? '0.6' : '1'">
+          Accept
+        </a>
+
+        <span style="padding:0 6px;">·</span>
+
+        <a href="#" class="text-danger"
+           (click)="$event.preventDefault(); rejectReq(r)"
+           [style.pointerEvents]="isBusy(r.userId) ? 'none' : 'auto'"
+           [style.opacity]="isBusy(r.userId) ? '0.6' : '1'">
+          Reject
+        </a>
+      </div>
+    </div>
+
+    <div *ngIf="incomingTotal > incomingLimit" style="padding:6px 0;">
+      <a [routerLink]="['/connections']">See all requests</a>
+    </div>
+
+    <hr style="margin:10px 0;"/>
+
+    <!-- Suggestions -->
+    <h4 class="grey">Who to Follow</h4>
+
+    <div *ngIf="loading" class="text-muted" style="padding: 10px 0;">
+      Loading...
+    </div>
+
+    <div *ngIf="!loading && suggestions.length === 0" class="text-muted" style="padding: 10px 0;">
+      No suggestions right now.
+    </div>
+
+    <div class="follow-user" *ngFor="let u of suggestions">
+      <img
+        [src]="imageSrc(u)"
+        (error)="onImgError($event)"
+        alt=""
+        class="profile-photo-sm pull-left"
+      />
+
+      <div>
+        <h5>
+          <a [routerLink]="['/timeline']">{{ displayName(u) }}</a>
+        </h5>
+
+        <a
+          href="#"
+          class="text-green"
+          (click)="$event.preventDefault(); onPrimaryAction(u)"
+          [style.pointerEvents]="isBusy(u.userId) ? 'none' : 'auto'"
+          [style.opacity]="isBusy(u.userId) ? '0.6' : '1'">
+          {{ primaryLabel(u.userId) }}
+        </a>
+
+        <span style="padding: 0 6px;">·</span>
+
+        <a
+          href="#"
+          class="text-danger"
+          (click)="$event.preventDefault(); onBlockToggle(u)"
+          [style.pointerEvents]="isBusy(u.userId) ? 'none' : 'auto'"
+          [style.opacity]="isBusy(u.userId) ? '0.6' : '1'">
+          {{ blockLabel(u.userId) }}
+        </a>
+      </div>
+    </div>
+
+    <div *ngIf="suggestions.length > suggestionsLimit" style="padding:6px 0;">
+      <a [routerLink]="['/connections']">See all</a>
+    </div>
+
+  </div>
+</div>
