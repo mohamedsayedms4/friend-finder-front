@@ -1,12 +1,14 @@
-
 <!-- Newsfeed Common Side Bar Left
         ================================================= -->
 <div class="col-md-3" style="position:static;">
   <div class="profile-card">
-  <img [src]="userImage" alt="user" class="profile-photo" />
+    <img [src]="userImage" alt="user" class="profile-photo" />
     <h5><a href="timeline.html" class="text-white">{{ userName }}</a></h5>
-    <a href="#" class="text-white"><i class="ion ion-android-person-add"></i> 1,299 followers</a>
+    <a href="#" class="text-white">
+      <i class="ion ion-android-person-add"></i> 1,299 followers
+    </a>
   </div><!--profile card ends-->
+
   <ul class="nav-news-feed">
     <li><i class="icon ion-ios-paper"></i><div><a href="newsfeed.html">My Newsfeed</a></div></li>
     <li><i class="icon ion-ios-people"></i><div><a href="newsfeed-people-nearby.html">People Nearby</a></div></li>
@@ -15,18 +17,66 @@
     <li><i class="icon ion-images"></i><div><a href="newsfeed-images.html">Images</a></div></li>
     <li><i class="icon ion-ios-videocam"></i><div><a href="newsfeed-videos.html">Videos</a></div></li>
   </ul><!--news-feed links ends-->
+
+  <!-- =========================
+       CHAT BLOCK (Dynamic)
+       ========================= -->
   <div id="chat-block">
-    <div class="title">Chat online</div>
-    <ul class="online-users list-inline">
-      <li><a href="newsfeed-messages.html" title="Linda Lohan"><img src="assets/images/users/user-2.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-      <li><a href="newsfeed-messages.html" title="Sophia Lee"><img src="assets/images/users/user-3.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-      <li><a href="newsfeed-messages.html" title="John Doe"><img src="assets/images/users/user-4.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-      <li><a href="newsfeed-messages.html" title="Alexis Clark"><img src="assets/images/users/user-5.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-      <li><a href="newsfeed-messages.html" title="James Carter"><img src="assets/images/users/user-6.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-      <li><a href="newsfeed-messages.html" title="Robert Cook"><img src="assets/images/users/user-7.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-      <li><a href="newsfeed-messages.html" title="Richard Bell"><img src="assets/images/users/user-8.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-      <li><a href="newsfeed-messages.html" title="Anna Young"><img src="assets/images/users/user-9.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
-      <li><a href="newsfeed-messages.html" title="Julia Cox"><img src="assets/images/users/user-10.jpg" alt="user" class="img-responsive profile-photo" /><span class="online-dot"></span></a></li>
+    <div class="title">
+      Chat online
+      <span class="chat-refresh" (click)="loadFriendsPresence(true)" title="Refresh">⟲</span>
+    </div>
+
+    <div class="chat-loading" *ngIf="loadingFriends">Loading...</div>
+
+    <ul class="online-users list-inline" *ngIf="!loadingFriends">
+      <li *ngFor="let f of friends">
+        <a href="javascript:void(0)"
+           (click)="openChat(f)"
+           [title]="friendDisplayName(f)">
+          <img [src]="friendAvatar(f)" alt="user" class="img-responsive profile-photo" />
+          <span class="online-dot" [class.offline-dot]="!f.online"></span>
+        </a>
+      </li>
     </ul>
+
+    <!-- Chat Panel -->
+    <div class="chat-panel" *ngIf="chatOpen && activeFriend">
+      <div class="chat-header">
+        <div class="chat-user">
+          <img [src]="friendAvatar(activeFriend)" class="chat-avatar" alt="user" />
+          <div class="chat-meta">
+            <div class="chat-name">{{ friendDisplayName(activeFriend) }}</div>
+            <div class="chat-status" [class.offline]="!activeFriend.online">
+              {{ activeFriend.online ? 'Online' : 'Offline' }}
+            </div>
+          </div>
+        </div>
+        <button class="chat-close" (click)="closeChat()">×</button>
+      </div>
+
+      <div class="chat-body">
+        <div *ngIf="loadingMessages" class="chat-loading">Loading messages...</div>
+
+        <div *ngIf="!loadingMessages && messages.length === 0" class="chat-empty">
+          No messages yet.
+        </div>
+
+        <div *ngFor="let m of messages"
+             class="chat-bubble"
+             [class.me]="meId != null && m.senderId === meId">
+          <div class="chat-text">{{ m.content }}</div>
+          <div class="chat-time">{{ m.createdAt | date:'short' }}</div>
+        </div>
+      </div>
+
+      <div class="chat-input">
+        <input type="text"
+               [(ngModel)]="draft"
+               placeholder="Write a message..."
+               (keydown.enter)="send()" />
+        <button (click)="send()">Send</button>
+      </div>
+    </div>
   </div><!--chat block ends-->
 </div>

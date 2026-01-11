@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -27,8 +27,6 @@ import { LoginComponent } from './componants/login/login.component';
 
 import { NoauthGuard } from 'src/service/guard/noauth.guard';
 import { AuthGuard } from 'src/service/guard/auth.guard';
-
-// ✅ هنا التصحيح: interceptor (مفرد)
 import { AuthInterceptor } from 'src/service/interceptor/auth.interceptor';
 
 const routes: Routes = [
@@ -72,11 +70,11 @@ const routes: Routes = [
   imports: [
     BrowserModule,
     RouterModule.forRoot(routes),
+    FormsModule,          // ✅ لازم لـ ngModel
     ReactiveFormsModule,
     HttpClientModule,
   ],
   providers: [
-    // ✅ ربط الـ interceptor
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],

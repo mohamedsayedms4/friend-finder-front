@@ -20,9 +20,14 @@
     "@angular/platform-browser-dynamic": "~10.2.0",
     "@angular/router": "~10.2.0",
     "@fortawesome/fontawesome-free": "^5.15.1",
+    "@stomp/stompjs": "^6.1.2",
     "bootstrap": "^3.3.7",
+    "buffer": "^6.0.3",
+    "process": "^0.11.10",
     "rxjs": "~6.6.0",
+    "sockjs-client": "^1.5.1",
     "tslib": "^2.0.0",
+    "webstomp-client": "^1.2.6",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
